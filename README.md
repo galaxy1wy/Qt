@@ -11,3 +11,5 @@ GUI应用程序是由事件（event）驱动的，点击鼠标，按下按键，
 - `发送事件（send event）`：有Qt或其他程序定向发送的事件；使用QCoreApplication::sendEvent()产生发送事件，有对象的event()函数直接处理。
 
 > Qt的主事件循环(QCoreApplication::exec())从事件队列中获取原生的系统事件，将它们转换为QEvent，并将转换后的事件发送给QObject；任何QObject派生的类都可以处理事件。
+
+![](images/QEvent.png)
