@@ -1,8 +1,8 @@
 # Qt
 
-## Qt Creator Code Rules
+## Qt-Creator-Code-Rules
 
-  - 请参考 [Qt Creator 代码规则](Qt Creator Code Rules/README_CN.md)
+  - 请参考 [Qt Creator 代码规则](Qt-Creator-Code-Rules/README_CN.md)
 
 ## Qt Model View
 
