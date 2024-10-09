@@ -186,16 +186,16 @@
 # 模式和实践
 
 命名空间：<br>
-  Qt Creator 中的命名空间策略如下:
+  >Qt Creator 中的命名空间策略如下:
     - 导出以供其他库或插件使用的库或插件的类/元件位于特定于该库/插件的命名空间中，例如 MyPlugin
     - 未导出的库或插件的类/元件位于其他 Internal 命名空间中，例如 MyPlugin::Internal
 
 传递文件名：<br>
-  Qt Creator API 要求文件名采用可移植格式，即即使在 Windows 上也使用斜杠 (/) 而不是反斜杠 (\)。要将文件名从用户传递给 API，请先使用 QDir::fromNativeSeparators 进行转换。要向用户显示文件名，请使用 QDir::toNativeSeparators 将其转换回本机格式。考虑使用 Utils::FilePath::fromUserInput(QString) 和 Utils::FilePath::toUserOutput() 执行这些任务。
-  在比较文件名时使用 Utils::FilePath，因为这会考虑区分大小写。还要确保比较干净的路径（QDir::cleanPath()）
+  >Qt Creator API 要求文件名采用可移植格式，即即使在 Windows 上也使用斜杠 (/) 而不是反斜杠 (\)。要将文件名从用户传递给 API，请先使用 QDir::fromNativeSeparators 进行转换。要向用户显示文件名，请使用 QDir::toNativeSeparators 将其转换回本机格式。考虑使用 Utils::FilePath::fromUserInput(QString) 和 Utils::FilePath::toUserOutput() 执行这些任务。
+  >在比较文件名时使用 Utils::FilePath，因为这会考虑区分大小写。还要确保比较干净的路径（QDir::cleanPath()）
 
 要使用的类和不使用的类：<br>
-  Qt Creator 代码的很大一部分处理与开发计算机不同的设备上的数据。这些可能在路径分隔符、行结束符、流程启动详细信息等方面有所不同；但是，一些基本的 Qt 类假定 Qt 应用程序只与类似于开发计算机的机器有关。因此，这些类不适合在 Qt Creator 中与非本地代码相关的部分使用。相反，Qt Creator 的 Utils 库提供了替代品，从而得出以下规则：
+  >Qt Creator 代码的很大一部分处理与开发计算机不同的设备上的数据。这些可能在路径分隔符、行结束符、流程启动详细信息等方面有所不同；但是，一些基本的 Qt 类假定 Qt 应用程序只与类似于开发计算机的机器有关。因此，这些类不适合在 Qt Creator 中与非本地代码相关的部分使用。相反，Qt Creator 的 Utils 库提供了替代品，从而得出以下规则：
     - 将 Utils::FilePath 用于语义上是文件或目录的任何 QString
     - 首选使用 Utils::FilePath，而不是使用 QDir 和 QFileInfo
     - 首选使用 Utils::P rocess 而不是 QProcess
