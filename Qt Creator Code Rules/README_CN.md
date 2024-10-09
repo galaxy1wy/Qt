@@ -185,16 +185,16 @@
 
 # 模式和实践
 
-命名空间：
+命名空间：<br>
   Qt Creator 中的命名空间策略如下:
     - 导出以供其他库或插件使用的库或插件的类/元件位于特定于该库/插件的命名空间中，例如 MyPlugin
     - 未导出的库或插件的类/元件位于其他 Internal 命名空间中，例如 MyPlugin::Internal
 
-传递文件名：
+传递文件名：<br>
   Qt Creator API 要求文件名采用可移植格式，即即使在 Windows 上也使用斜杠 (/) 而不是反斜杠 (\)。要将文件名从用户传递给 API，请先使用 QDir::fromNativeSeparators 进行转换。要向用户显示文件名，请使用 QDir::toNativeSeparators 将其转换回本机格式。考虑使用 Utils::FilePath::fromUserInput(QString) 和 Utils::FilePath::toUserOutput() 执行这些任务。
   在比较文件名时使用 Utils::FilePath，因为这会考虑区分大小写。还要确保比较干净的路径（QDir::cleanPath()）
 
-要使用的类和不使用的类：
+要使用的类和不使用的类：<br>
   Qt Creator 代码的很大一部分处理与开发计算机不同的设备上的数据。这些可能在路径分隔符、行结束符、流程启动详细信息等方面有所不同；但是，一些基本的 Qt 类假定 Qt 应用程序只与类似于开发计算机的机器有关。因此，这些类不适合在 Qt Creator 中与非本地代码相关的部分使用。相反，Qt Creator 的 Utils 库提供了替代品，从而得出以下规则：
     - 将 Utils::FilePath 用于语义上是文件或目录的任何 QString
     - 首选使用 Utils::FilePath，而不是使用 QDir 和 QFileInfo
@@ -202,18 +202,19 @@
     - 如果 Utils::FilePath 或 Utils::Process 功能不足以达到您的目的，则最好增强它们，而不是回退到 QString 或 QProcess
     - 避免使用平台 #ifdefs，除非本地执行的代码绝对需要它们，即使这样，也更喜欢 Utils::HostInfo 而不是 #ifdefs
 
-插件依赖项：
+插件依赖项：<br>
   为了保持 Qt Creator 的可扩展性，我们的目标是尽可能少地保持插件之间和外部库的硬运行时依赖关系
 
-通过回调扩展基本插件功能：
+通过回调扩展基本插件功能：<br>
   此模式允许叶插件通过注入回调来向中央插件提供额外的功能，它用于在某些设置中有用的功能，但在其他设置中不适用或被视为侵入性（例如，由于大小或外部依赖关系），因此用户可能希望在不影响其余设置的情况下启用或禁用它。例如，叶子插件可以依赖于一个大的（或其他不方便的）外部依赖项，而无需将此依赖项强加给中央插件。
 
-插件扩展点：
+插件扩展点：<br>
   插件扩展点是由一个插件提供的接口，由其他插件实现。然后，该插件会检索接口的所有实现并使用它们。也就是说，它们扩展了插件的功能。通常，接口的实现在插件初始化期间被放入全局对象池中，插件在插件初始化结束时从对象池中检索它们。例如，Find 插件提供了 FindFilter 接口供其他插件实现。使用 FindFilter 界面，可以添加其他搜索范围，这些范围显示在 Advanced Search 对话框中。Find 插件从全局对象池中检索所有 FindFilter 实现，并在对话框中显示它们。该插件将实际的搜索请求转发到正确的 FindFilter 实现，然后执行搜索。
 
 使用全局对象池：<br>
   可以通过 ExtensionSystem::PluginManager：：addObject() 将对象添加到全局对象池中，并通过 ExtensionSystem::PluginManager::getObject() 再次检索特定类型的对象。这应该主要用于 Plugin Extension Points 的实现。
 
-Lambda 表达式：
+Lambda 表达式：<br>
+  
 
 
