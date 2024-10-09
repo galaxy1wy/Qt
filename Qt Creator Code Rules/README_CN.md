@@ -211,7 +211,9 @@
 插件扩展点：
   插件扩展点是由一个插件提供的接口，由其他插件实现。然后，该插件会检索接口的所有实现并使用它们。也就是说，它们扩展了插件的功能。通常，接口的实现在插件初始化期间被放入全局对象池中，插件在插件初始化结束时从对象池中检索它们。例如，Find 插件提供了 FindFilter 接口供其他插件实现。使用 FindFilter 界面，可以添加其他搜索范围，这些范围显示在 Advanced Search 对话框中。Find 插件从全局对象池中检索所有 FindFilter 实现，并在对话框中显示它们。该插件将实际的搜索请求转发到正确的 FindFilter 实现，然后执行搜索。
 
-使用全局对象池：
+使用全局对象池：<br>
   可以通过 ExtensionSystem::PluginManager：：addObject() 将对象添加到全局对象池中，并通过 ExtensionSystem::PluginManager::getObject() 再次检索特定类型的对象。这应该主要用于 Plugin Extension Points 的实现。
+
+Lambda 表达式：
 
 
