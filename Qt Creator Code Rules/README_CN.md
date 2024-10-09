@@ -61,23 +61,23 @@
 
 运算符名称和括号
   - 不要在运算符名称和括号之间使用空格。等式标记 (==) 是运算符名称的一部分，因此空格会使声明看起来像表达式：
-  ```c++
-    operator==(type)
-    
-    -NOT-
-    
-    operator == (type)
-  ```
+    ```c++
+      operator==(type)
+      
+      -NOT-
+      
+      operator == (type)
+    ```
 
 函数名称和括号
   - 不要在函数名称和括号之间使用空格：
-  ```c++
-    void mangle()
-
-    -NOT-
-    
-    void mangle ()
-  ```
+    ```c++
+      void mangle()
+  
+      -NOT-
+      
+      void mangle ()
+    ```
   
 关键字
  - 始终在关键字之后和大括号之前使用单个空格：
