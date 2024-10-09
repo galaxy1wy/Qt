@@ -195,12 +195,12 @@
   >在比较文件名时使用 Utils::FilePath，因为这会考虑区分大小写。还要确保比较干净的路径（QDir::cleanPath()）
 
 要使用的类和不使用的类：<br>
-  >Qt Creator 代码的很大一部分处理与开发计算机不同的设备上的数据。这些可能在路径分隔符、行结束符、流程启动详细信息等方面有所不同；但是，一些基本的 Qt 类假定 Qt 应用程序只与类似于开发计算机的机器有关。因此，这些类不适合在 Qt Creator 中与非本地代码相关的部分使用。相反，Qt Creator 的 Utils 库提供了替代品，从而得出以下规则：
-    - 将 Utils::FilePath 用于语义上是文件或目录的任何 QString
-    - 首选使用 Utils::FilePath，而不是使用 QDir 和 QFileInfo
-    - 首选使用 Utils::P rocess 而不是 QProcess
-    - 如果 Utils::FilePath 或 Utils::Process 功能不足以达到您的目的，则最好增强它们，而不是回退到 QString 或 QProcess
-    - 避免使用平台 #ifdefs，除非本地执行的代码绝对需要它们，即使这样，也更喜欢 Utils::HostInfo 而不是 #ifdefs
+  >Qt Creator 代码的很大一部分处理与开发计算机不同的设备上的数据。这些可能在路径分隔符、行结束符、流程启动详细信息等方面有所不同；但是，一些基本的 Qt 类假定 Qt 应用程序只与类似于开发计算机的机器有关。因此，这些类不适合在 Qt Creator 中与非本地代码相关的部分使用。相反，Qt Creator 的 Utils 库提供了替代品，从而得出以下规则：<br>
+    - 将 Utils::FilePath 用于语义上是文件或目录的任何 QString <br>
+    - 首选使用 Utils::FilePath，而不是使用 QDir 和 QFileInfo <br>
+    - 首选使用 Utils::P rocess 而不是 QProcess  <br>
+    - 如果 Utils::FilePath 或 Utils::Process 功能不足以达到您的目的，则最好增强它们，而不是回退到 QString 或 QProcess <br>
+    - 避免使用平台 #ifdefs，除非本地执行的代码绝对需要它们，即使这样，也更喜欢 Utils::HostInfo 而不是 #ifdefs <br>
 
 插件依赖项：<br>
   >为了保持 Qt Creator 的可扩展性，我们的目标是尽可能少地保持插件之间和外部库的硬运行时依赖关系
