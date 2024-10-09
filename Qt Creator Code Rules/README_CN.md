@@ -215,6 +215,12 @@
   >可以通过 ExtensionSystem::PluginManager::addObject() 将对象添加到全局对象池中，并通过 ExtensionSystem::PluginManager::getObject() 再次检索特定类型的对象。这应该主要用于 Plugin Extension Points 的实现。
 
 Lambda 表达式：<br>
+  >当 lambda 既不接受参数也不指定返回类型时，删除圆括号<br>
+  >定义 lambda 时，将方括号与圆括号粘合在一起<br>
+  >将捕获列表、参数列表、返回类型和左括号放在第一行，将函数主体缩进以下几行，将右括号放在新行<br>
+  >将封闭函数调用的右括号和分号放在与 lambda 的右大括号相同的行上<br>
+  >如果您在 'if' 语句中使用 lambda，请在新行开始 lambda，以避免 lambda 的左大括号和 'if' 语句的左大括号之间产生混淆<br>
+  >如果合适，将 lambda 完全放在一行上 <br>
   
 
 
