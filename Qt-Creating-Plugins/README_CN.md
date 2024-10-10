@@ -70,8 +70,58 @@
   |exampleconstants.h            |定义插件代码使用的常量的 Headers|
   |example.h, example.cpp        |C++ 头文件和源文件，用于定义插件类，该插件类将由 Qt Creator 的插件管理器实例化和运行|
   |build_cmake.yml|添加 GitHub 操作和工作流程，在Windows、Linux和macOS上将提交推送到 GitHub 时，该工作流程都会构建插件。更多信息，请参阅.github\workflow\README.md|
-  
-  
-  
 
+
+# CMake 项目
+
+  CMake 项目文件CMakeLists.txt定义插件的编译方式。Qt Creator 插件除了告诉 CMake 哪些文件需要编译（或由 moc 或 uic 处理）之外，还需要在那里进行特定的设置。详细看看项目向导生成了什么  
+  ```cmake
+    # Remove when sharing with others.
+    list(APPEND CMAKE_PREFIX_PATH "/Users/example/qt-creator/build")
+  ```
+  list（APPEND ...） 调用告诉 CMake 在其依赖项的搜索路径中包含您在向导中指定的 Qt Creator 构建路径。由于它包含本地计算机上的绝对路径，因此在与他人共享项目时应删除此行。  
+  如果没有这一行，在使用 CMake 配置插件时，您需要显式添加 Qt Creator 构建的路径以CMAKE_PREFIX_PATH  
+
+  ```cmake
+    project(Example)
+
+    set(CMAKE_AUTOMOC ON)
+    set(CMAKE_AUTORCC ON)
+    set(CMAKE_AUTOUIC ON)
+    set(CMAKE_CXX_STANDARD 17)
+  ```
+  本节对 Qt/CMake 项目进行一些标准设置。除了设置项目名称和要使用的 C++ 标准外，它还会自动检测需要通过 moc、rcc 或 uic 运行的文件  
+
+  ```cmake
+    find_package(QtCreator COMPONENTS Core REQUIRED)
+    find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets REQUIRED)
+    set(QtX Qt${QT_VERSION_MAJOR})
+  ```
+  本节告诉 CMake 找到 Qt Creator 和 Qt。如果你的插件需要额外的 Qt 模块，你需要将它们添加到本节中对应的 find_package 调用中  
+  要查找 Qt Creator 和 Qt，当您使用 CMake 配置插件时，CMAKE_PREFIX_PATH中必须存在 Qt Creator 和 Qt 安装的路径
+  
+  ```cmake
+    add_qtc_plugin(Example
+      PLUGIN_DEPENDS
+        QtCreator::Core
+      DEPENDS
+        ${QtX}::Widgets
+        QtCreator::ExtensionSystem
+        QtCreator::Utils
+      SOURCES
+        .github/workflows/build_cmake.yml
+        .github/workflows/README.md
+        README.md
+        example.cpp
+        example.h
+        example_global.h
+        exampleconstants.h
+        examplefunctions.h
+    )
+  ```
+  add_qtc_plugin 调用会为您的插件创建一个具有指定名称的目标  
+  在 PLUGIN_DEPENDS 子部分中，您需要指定您的插件所依赖的 Qt Creator 插件。有效值是前缀为 QtCreator::的插件名称  
+  在 DEPENDS 子部分中，您需要指定插件所依赖的库。使用前缀为 $\{QtX\}:: 的 Qt 模块名称链接到其他 Qt 模块。要链接到其他 Qt Creator 库，请为其名称添加 QtCreator::前缀。在此小节中，您还可以指定插件所依赖的其他库  
+  在 SOURCES 子部分中，指定属于您的插件项目的所有文件。CMake 会自动将这些分类为源文件和头文件。本节中的其他文件被 CMake 忽略，但会出现在 Qt Creator 等 IDE 中显示的项目树中，以便于访问  
+  
    
