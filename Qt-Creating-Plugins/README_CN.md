@@ -7,4 +7,12 @@
   - TextEditor 插件为不同的文本编辑器提供了一个框架和基本实现，具有高亮、完成和折叠功能，然后其他插件可以使用该插件向 Qt Creator 添加更专业的文本编辑器类型，例如编辑 C/C++ 或 .pro 文件。
 
   了解基本插件由什么组成，如何编写插件规范文件，插件的生命周期是什么，扩展现有插件功能和为其他插件提供接口的一般原则是什么，能够编写第一个插件。<br>
-  
+
+ # 创建插件项目操作步骤
+
+   ** 注意：**  此操作基于Qt Creator IDE。
+
+    * 1.选择 File > New Project > Library > Qt Creator Plugin >Choose
+    (https://doc.qt.io/qtcreator-extending/images/firstplugin-wizard.png)
+
+   
