@@ -10,9 +10,9 @@
 
  # 创建插件项目操作步骤
 
-   ** 注意：**  此操作基于Qt Creator IDE。
+   **注意：** 此操作基于Qt Creator IDE。
 
     * 1.选择 File > New Project > Library > Qt Creator Plugin >Choose
-    (https://doc.qt.io/qtcreator-extending/images/firstplugin-wizard.png)
+    ![选择](https://doc.qt.io/qtcreator-extending/images/firstplugin-wizard.png)
 
    
