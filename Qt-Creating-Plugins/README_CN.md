@@ -55,7 +55,21 @@
   如果在项目向导中传递了正确的 Qt Creator 构建路径，则您的插件在按下构建按钮时应该可以正常构建。在运行项目之前，选择Build & Run > Run以指定运行设置：  
   ![](https://doc.qt.io/qtcreator-extending/images/firstplugin-runsettings.png)  
   在项目向导的 Qt Creator 构建字段中指定的构建中选择 Qt Creator 可执行文件的路径，并将 Command line arguments 字段的值设置为 -pluginpath %{buildDir}  
-  单击“确定”后，Qt Creator 将启动，可以通过查找菜单项 Tools > Example 并在 Help > About Plugins 对话框中查找插件来验证插件是否已成功加载
+  单击“确定”后，Qt Creator 将启动，可以通过查找菜单项 Tools > Example 并在 Help > About Plugins 对话框中查找插件来验证插件是否已成功加载。
+
+# 文件结构
+
+  插件向导会创建一组插件需要或应该具有的基本文件。我们将在以下部分中详细介绍其中的一些，这是一个简短的概述：  
+
+  |          File文件          |          Role角色          |
+  |:---------------------------|:---------------------------|
+  |README.md                    |描述如何构建和运行插件      |
+  |Example.json.in              |插件元数据模板。CMake 从此文件创建一个 Example.json，该文件作为元数据编译到插件中。Qt Creator 读取元数据以了解有关插件的信息|
+  |CMakeLists.txt                |Project 文件，CMake 使用它来生成构建文件并构建插件|
+  |example_global.h              |包含宏定义，当此插件应将元件导出到其他插件时，这些定义非常有用|
+  |exampleconstants.h            |定义插件代码使用的常量的 Headers|
+  |example.h, example.cpp        |C++ 头文件和源文件，用于定义插件类，该插件类将由 Qt Creator 的插件管理器实例化和运行|
+  |build_cmake.yml|添加 GitHub 操作和工作流程，在Windows、Linux和macOS上将提交推送到 GitHub 时，该工作流程都会构建插件。更多信息，请参阅.github\workflow\README.md|
   
   
   
