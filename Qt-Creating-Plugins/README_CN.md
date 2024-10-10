@@ -6,7 +6,7 @@
   - Core 插件是 Qt Creator 运行所必需的非常基本的插件，它提供主窗口本身，以及用于添加菜单项、模式、编辑器类型、导航面板和许多其他内容的 API。
   - TextEditor 插件为不同的文本编辑器提供了一个框架和基本实现，具有高亮、完成和折叠功能，然后其他插件可以使用该插件向 Qt Creator 添加更专业的文本编辑器类型，例如编辑 C/C++ 或 .pro 文件。
 
-  了解基本插件由什么组成，如何编写插件规范文件，插件的生命周期是什么，扩展现有插件功能和为其他插件提供接口的一般原则是什么，能够编写第一个插件。<br>
+  了解基本插件由什么组成，如何编写插件规范文件，插件的生命周期[^2] 是什么，扩展现有插件功能和为其他插件提供接口的一般原则是什么，能够编写第一个插件。<br>
 
  # 创建插件项目操作步骤
 
@@ -126,7 +126,7 @@
 
 # 插件元数据模板
 
-  .json 文件是一个 JSON 文件，其中包含插件管理器在实际加载插件的库文件之前查找插件并解决其依赖项所需的信息。在这里只简单介绍一下。有关更多信息，请参阅 [插件元数据](https://doc.qt.io/qtcreator-extending/plugin-meta-data.html)。  
+  .json 文件是一个 JSON 文件，其中包含插件管理器在实际加载插件的库文件之前查找插件并解决其依赖项所需的信息。在这里只简单介绍一下。有关更多信息，请参阅 插件元数据[^3]。  
   该向导实际上并不直接创建 .json 文件，而是创建一个 .json.in 文件。qmake 使用它来生成实际的插件.json元数据文件，将 QTCREATOR_VERSION 等变量替换为它们的实际值。因此，需要转义 .json.in 文件中的所有反斜杠和引号（即，需要编写 \ 来获得反斜杠，编写 \“ 来获取生成的插件 JSON 元数据中的引号）  
   
   ```json
@@ -169,14 +169,14 @@
         Q_OBJECT
         Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QtCreatorPlugin" FILE "Example.json")
   ```
-  所有Qt Creator插件都必须从 ExtensionSystem::IPlugin[^1] 派生，并且是QObjects。Q_PLUGIN_METADATA 宏 是创建有效 Qt 插件所必需的。宏中给出的 IID 必须是 org.qt-project.Qt.QtCreatorPlugin ，才能将其标识为 Qt Creator 插件，并且 FILE 必须指向插件的元数据文件，如[插件元数据](https://doc.qt.io/qtcreator-extending/plugin-meta-data.html)中所述。
+  所有Qt Creator插件都必须从 ExtensionSystem::IPlugin[^1] 派生，并且是QObjects。Q_PLUGIN_METADATA 宏 是创建有效 Qt 插件所必需的。宏中给出的 IID 必须是 org.qt-project.Qt.QtCreatorPlugin ，才能将其标识为 Qt Creator 插件，并且 FILE 必须指向插件的元数据文件，如 插件元数据[^3] 中所述。
 
   ```cpp
     bool initialize(const QStringList &arguments, QString *errorString);
     void extensionsInitialized();
     ShutdownFlag aboutToShutdown();
   ```
-  基类定义了在[插件的生命周期](https://doc.qt.io/qtcreator-extending/plugin-lifecycle.html)中调用的基本函数，这些函数在这里为您的新插件实现。这些功能及其作用在 插件生命周期 中有详细说明。
+  基类定义了在 插件的生命周期[^2] 中调用的基本函数，这些函数在这里为您的新插件实现。这些功能及其作用在 插件生命周期[^2] 中有详细说明。
 
   ```cpp
     private:
@@ -189,7 +189,7 @@
 
   来自插件代码本身、Core 插件和 Qt 的所有必要的头文件都包含在文件的开头。菜单和菜单项的设置是在插件的 initialize 函数中完成的，该函数是插件构造函数之后调用的第一件事。在该函数中，插件可以确保它所依赖的插件的基本设置已经完成，例如，Core 插件的 ActionManager 实例已经创建。
 
-  有关实现插件接口的更多信息，请参阅 ExtensionSystem::IPlugin API 文档和插件生命周期。
+  有关实现插件接口的更多信息，请参阅 ExtensionSystem::IPlugin[^1] API 文档和插件生命周期。
   ```cpp
     auto action = new QAction(tr("Example Action"), this);
     Core::Command *cmd = Core::ActionManager::registerAction(action, Constants::ACTION_ID,
@@ -223,3 +223,4 @@
   
    [^1]: [ExtensionSystem::IPlugin](https://doc.qt.io/qtcreator-extending/extensionsystem-iplugin.html)
    [^2]: [插件的生命周期](https://doc.qt.io/qtcreator-extending/plugin-lifecycle.html)
+   [^3]: [插件元数据](https://doc.qt.io/qtcreator-extending/plugin-meta-data.html)
