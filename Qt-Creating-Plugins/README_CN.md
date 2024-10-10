@@ -169,7 +169,7 @@
         Q_OBJECT
         Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QtCreatorPlugin" FILE "Example.json")
   ```
-  所有Qt Creator插件都必须从[ExtensionSystem::IPlugin](https://doc.qt.io/qtcreator-extending/extensionsystem-iplugin.html)派生，并且是QObjects。Q_PLUGIN_METADATA 宏 是创建有效 Qt 插件所必需的。宏中给出的 IID 必须是 org.qt-project.Qt.QtCreatorPlugin ，才能将其标识为 Qt Creator 插件，并且 FILE 必须指向插件的元数据文件，如[插件元数据](https://doc.qt.io/qtcreator-extending/plugin-meta-data.html)中所述。
+  所有Qt Creator插件都必须从 ExtensionSystem::IPlugin[^1] 派生，并且是QObjects。Q_PLUGIN_METADATA 宏 是创建有效 Qt 插件所必需的。宏中给出的 IID 必须是 org.qt-project.Qt.QtCreatorPlugin ，才能将其标识为 Qt Creator 插件，并且 FILE 必须指向插件的元数据文件，如[插件元数据](https://doc.qt.io/qtcreator-extending/plugin-meta-data.html)中所述。
 
   ```cpp
     bool initialize(const QStringList &arguments, QString *errorString);
@@ -215,5 +215,11 @@
                                  tr("This is an action from Example."));
     }
   ```
-  此部分定义触发菜单项时调用的代码。它使用 Qt API 打开一个消息框，该消息框显示信息性文本和 OK 按钮
-   
+  此部分定义触发菜单项时调用的代码。它使用 Qt API 打开一个消息框，该消息框显示信息性文本和 OK 按钮 
+
+
+
+
+  
+   [^1]: [ExtensionSystem::IPlugin](https://doc.qt.io/qtcreator-extending/extensionsystem-iplugin.html)
+   [^2]: [插件的生命周期](https://doc.qt.io/qtcreator-extending/plugin-lifecycle.html)
