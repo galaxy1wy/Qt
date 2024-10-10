@@ -161,7 +161,7 @@
     namespace Example {
     namespace Internal {
   ```
-  该插件在 Example：：Internal 命名空间中定义，这符合 Qt Creator 源代码中命名空间的编码规则。
+  该插件在 Example：：Internal 命名空间中定义，这符合 Qt Creator 源代码中[命名空间](https://doc.qt.io/qtcreator-extending/coding-style.html#coding-rules-namespacing)的编码规则。
 
   ```cpp
     class ExamplePlugin : public ExtensionSystem::IPlugin
@@ -169,14 +169,14 @@
         Q_OBJECT
         Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QtCreatorPlugin" FILE "Example.json")
   ```
-  所有Qt Creator插件都必须从ExtensionSystem::IPlugin派生，并且是QObjects。Q_PLUGIN_METADATA 宏 是创建有效 Qt 插件所必需的。宏中给出的 IID 必须是 org.qt-project.Qt.QtCreatorPlugin ，才能将其标识为 Qt Creator 插件，并且 FILE 必须指向插件的元数据文件，如插件元数据中所述。
+  所有Qt Creator插件都必须从[ExtensionSystem::IPlugin](https://doc.qt.io/qtcreator-extending/extensionsystem-iplugin.html)派生，并且是QObjects。Q_PLUGIN_METADATA 宏 是创建有效 Qt 插件所必需的。宏中给出的 IID 必须是 org.qt-project.Qt.QtCreatorPlugin ，才能将其标识为 Qt Creator 插件，并且 FILE 必须指向插件的元数据文件，如[插件元数据](https://doc.qt.io/qtcreator-extending/plugin-meta-data.html)中所述。
 
   ```cpp
     bool initialize(const QStringList &arguments, QString *errorString);
     void extensionsInitialized();
     ShutdownFlag aboutToShutdown();
   ```
-  基类定义了在插件的生命周期中调用的基本函数，这些函数在这里为您的新插件实现。这些功能及其作用在 插件生命周期 中有详细说明。
+  基类定义了在[插件的生命周期](https://doc.qt.io/qtcreator-extending/plugin-lifecycle.html)中调用的基本函数，这些函数在这里为您的新插件实现。这些功能及其作用在 插件生命周期 中有详细说明。
 
   ```cpp
     private:
