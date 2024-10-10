@@ -123,5 +123,97 @@
   在 PLUGIN_DEPENDS 子部分中，您需要指定您的插件所依赖的 Qt Creator 插件。有效值是前缀为 QtCreator::的插件名称  
   在 DEPENDS 子部分中，您需要指定插件所依赖的库。使用前缀为 $\{QtX\}:: 的 Qt 模块名称链接到其他 Qt 模块。要链接到其他 Qt Creator 库，请为其名称添加 QtCreator::前缀。在此小节中，您还可以指定插件所依赖的其他库  
   在 SOURCES 子部分中，指定属于您的插件项目的所有文件。CMake 会自动将这些分类为源文件和头文件。本节中的其他文件被 CMake 忽略，但会出现在 Qt Creator 等 IDE 中显示的项目树中，以便于访问  
+
+# 插件元数据模板
+
+  .json 文件是一个 JSON 文件，其中包含插件管理器在实际加载插件的库文件之前查找插件并解决其依赖项所需的信息。在这里只简单介绍一下。有关更多信息，请参阅 [插件元数据](https://doc.qt.io/qtcreator-extending/plugin-meta-data.html)。  
+  该向导实际上并不直接创建 .json 文件，而是创建一个 .json.in 文件。qmake 使用它来生成实际的插件.json元数据文件，将 QTCREATOR_VERSION 等变量替换为它们的实际值。因此，需要转义 .json.in 文件中的所有反斜杠和引号（即，需要编写 \ 来获得反斜杠，编写 \“ 来获取生成的插件 JSON 元数据中的引号）  
   
+  ```json
+    "Name" : "Example",
+    "Version" : "0.0.1",
+    "CompatVersion" : "0.0.1",
+  ```
+  向导创建的元数据中的第一项定义插件的名称、版本以及当前版本与此插件的哪个版本二进制兼容
+  
+  ```json
+    "Vendor" : "MyCompany",
+    "Copyright" : "(C) MyCompany",
+    "License" : "Put short license information here",
+    "Description" : "Put a short description of your plugin here.",
+    "Url" : "https://www.mycompany.com",
+  ```
+  之后，您将找到有关您在项目向导中提供的插件的信息
+
+  ```json
+    ${IDE_PLUGIN_DEPENDENCIES}
+  ```
+  IDE_PLUGIN_DEPENDENCIES 变量会自动替换为插件的 .pro 文件中QTC_PLUGIN_RECOMMENDS QTC_PLUGIN_DEPENDS 中的依赖项信息
+
+# 插件类
+
+  文件 example.h 和 example.cpp 定义了的小插件的插件实现。将在此处重点介绍一些亮点，并提供指向各个部分的更多详细信息的指针  
+
+## Header File 头文件
+  头文件 example.h 定义插件类的接口。
+  
+  ```c
+    namespace Example {
+    namespace Internal {
+  ```
+  该插件在 Example：：Internal 命名空间中定义，这符合 Qt Creator 源代码中命名空间的编码规则。
+
+  ```cpp
+    class ExamplePlugin : public ExtensionSystem::IPlugin
+    {
+        Q_OBJECT
+        Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QtCreatorPlugin" FILE "Example.json")
+  ```
+  所有Qt Creator插件都必须从ExtensionSystem::IPlugin派生，并且是QObjects。Q_PLUGIN_METADATA 宏 是创建有效 Qt 插件所必需的。宏中给出的 IID 必须是 org.qt-project.Qt.QtCreatorPlugin ，才能将其标识为 Qt Creator 插件，并且 FILE 必须指向插件的元数据文件，如插件元数据中所述。
+
+  ```cpp
+    bool initialize(const QStringList &arguments, QString *errorString);
+    void extensionsInitialized();
+    ShutdownFlag aboutToShutdown();
+  ```
+  基类定义了在插件的生命周期中调用的基本函数，这些函数在这里为您的新插件实现。这些功能及其作用在 插件生命周期 中有详细说明。
+
+  ```cpp
+    private:
+        void triggerAction();
+  ```
+  该插件有一个额外的自定义插槽，用于在用户选择此插件添加的菜单项时弹出一个对话框。
+
+## Source File 源文件
+  源文件包含插件的实际实现，该插件注册新的菜单和菜单项，并在触发该项时打开一个消息框。
+
+  来自插件代码本身、Core 插件和 Qt 的所有必要的头文件都包含在文件的开头。菜单和菜单项的设置是在插件的 initialize 函数中完成的，该函数是插件构造函数之后调用的第一件事。在该函数中，插件可以确保它所依赖的插件的基本设置已经完成，例如，Core 插件的 ActionManager 实例已经创建。
+
+  有关实现插件接口的更多信息，请参阅 ExtensionSystem::IPlugin API 文档和插件生命周期。
+  ```cpp
+    auto action = new QAction(tr("Example Action"), this);
+    Core::Command *cmd = Core::ActionManager::registerAction(action, Constants::ACTION_ID,
+                                                             Core::Context(Core::Constants::C_GLOBAL));
+    cmd->setDefaultKeySequence(QKeySequence(tr("Ctrl+Alt+Meta+A")));
+    connect(action, &QAction::triggered, this, &ExamplePlugin::triggerAction);
+  ```
+  这部分代码创建一个新的 QAction，在操作管理器中将其注册为新 Command，并将其连接到插件的插槽。action manager 提供了一个中心位置，用户可以在其中分配和更改键盘快捷键，并管理例如在不同情况下应将菜单项定向到不同插件的情况，以及其他一些事情。
+
+  ```cpp
+    Core::ActionContainer *menu = Core::ActionManager::createMenu(Constants::MENU_ID);
+    menu->menu()->setTitle(tr("Example"));
+    menu->addAction(cmd);
+    Core::ActionManager::actionContainer(Core::Constants::M_TOOLS)->addMenu(menu);
+  ```
+  在这里，将创建一个新的菜单项，将创建的命令添加到其中，并将菜单添加到菜单栏的 Tools 菜单中。
+
+  ```cpp
+    void ExamplePlugin::triggerAction()
+    {
+        QMessageBox::information(Core::ICore::mainWindow(),
+                                 tr("Action Triggered"),
+                                 tr("This is an action from Example."));
+    }
+  ```
+  此部分定义触发菜单项时调用的代码。它使用 Qt API 打开一个消息框，该消息框显示信息性文本和 OK 按钮
    
